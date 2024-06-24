@@ -7,30 +7,31 @@ void followLine2(bool readSenL, int readSenLC, bool readSenC, int readSenRC, boo
   if (readC) {
     moveFront();
   } else {
-    char lastCurve;
+    bReadLC = (readLC < curveValue ? false : true);
+    bReadRC = (readRC < curveValue ? false : true);
 
-    while (!readC) {
-      reading();
-      bReadLC = (readLC < curveValue ? false : true);
-      bReadRC = (readRC < curveValue ? false : true);
+    if ((readL && readLC) || (readL && !bReadLC)) {
+      stopMoving();
 
-      if (readL || bReadLC) {
-        lastCurve = "L";
+      while (!readC) {
+        reading();
         moveLeft();
-      } else if (readR || bReadRC) {
-        lastCurve = "R";
-        moveRight();
-      } else if (readC) {
-        if (lastCurve == "L") {
-          moveLeft();
-          delay(120);
-        } else {
-          moveRight();
-          delay(120);
-        }
-      } else {
-        moveFront();
       }
+    } else if ((readR && readRC) || (readR && !bReadRC)) {
+      stopMoving();
+
+      while(!readC) {
+        reading();
+        moveRight();
+      }
+    }
+
+    else if (readL || bReadLC) {
+      moveLeft();
+    } else if (readR || bReadRC) {
+      moveRight();
+    } else {
+      moveFront();
     }
   }
 }

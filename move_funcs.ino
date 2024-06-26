@@ -1,6 +1,3 @@
-int curvePwm = 200;
-int straightPwm = 180;
-
 void handleMotor(uint8_t statLF, uint8_t statLB, uint8_t statRF, uint8_t statRB, uint8_t pwmR, uint8_t pwmL) {
   digitalWrite(wheelLF, statLF);
   digitalWrite(wheelLB, statLB);

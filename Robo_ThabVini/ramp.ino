@@ -1,17 +1,7 @@
-void followLine(bool readSenL, int readSenLC, bool readSenC, int readSenRC, bool readSenR) {
+void followLineInRamp(bool readSenL, int readSenLC, bool readSenC, int readSenRC, bool readSenR) {
   reading();
 
   if ((readL && bReadLC && readC && !readR) || (readR && bReadRC && readC && !readL) || (readR && readL)) {
-    stopMoving();
-    delay(50);
-    moveBack();
-    delay(150);
-    digitalWrite(rgbLedR, HIGH);
-    digitalWrite(rgbLedL, HIGH);
-    stopMoving();
-    delay(200);
-    greenSide = readGreen();
-    followGreen();
     digitalWrite(rgbLedR, LOW);
     digitalWrite(rgbLedL, LOW);
   } else if (readC) {
@@ -20,28 +10,28 @@ void followLine(bool readSenL, int readSenLC, bool readSenC, int readSenRC, bool
     if ((laserDist <= 12) && (sonicDist <= 12)) {
       obstacleToRight();
     }
-    moveFront();
+    moveFrontInRamp();
   } else {
     if ((readL && readLC) || (readL && !bReadLC)) {
       stopMoving();
 
       while (!readC) {
         reading();
-        moveLeft();
+        moveLeftInRamp();
       }
     } else if ((readR && readRC) || (readR && !bReadRC)) {
       stopMoving();
 
       while(!readC) {
         reading();
-        moveRight();
+        moveRightInRamp();
       }
     } else if (readL || bReadLC) {
-      moveLeft();
+      moveLeftInRamp();
     } else if (readR || bReadRC) {
-      moveRight();
+      moveRightInRamp();
     } else {
-      moveFront();
+      moveFrontInRamp();
     }
   }
 }

@@ -1,5 +1,6 @@
 #include "Adafruit_VL53L0X.h"
 #include "Adafruit_TCS34725.h"
+#include <MPU6050_tockn.h>
 #include <Wire.h>
 
 // Esteira e motores
@@ -56,17 +57,35 @@ bool bReadLC;
 bool bReadRC;
 
 // Valores para seguir linha 
-int curvePwm = 190;
-int straightPwmR = 120;
-int straightPwmL = 120;
+int curvePwm = 160;
+int straightPwmR = 150;
+int straightPwmL = 150;
 int curveValue = 800;
+
+// Acelerômetro 
+int accelPort = 2;
+MPU6050 xlr8(Wire);
+struct Accel {
+  float x;
+  float y;
+  float z;
+};
+Accel firstAngle;
 
 // Rampa
 bool inRamp = false;
+int curvePwmInRamp = 255 ;
+int straightPwmRInRamp = 240;
+int straightPwmLInRamp = 240;
+
 
 void setup() {
   Serial.begin(9600);
   Wire.begin();
+
+  initXlr8();
+  firstAngle = getAngleRead(accelPort);
+
   rgbInit();
   initLaser();
   pinMode(rgbLedR, OUTPUT);
@@ -83,18 +102,22 @@ void setup() {
 }
 
 void loop() {
-  // reading();
-  // moveFront();
-  followLine(readL,  readLC,  readC,  readRC,  readR);
-  // showReading();
-  // Serial.println(readGreen());
+  Accel angle = getAngleRead(accelPort);
+  // Serial.print("Inicial - ");
+  // Serial.println(firstAngle.y);
+  // Serial.print("Angulo - ");
+  // Serial.println(angle.y);
+  // delay(500);
 
-  // Serial.print("Esquerdo: ");
-  // showUltraDistance(TRIG_L, ECHO_L);
-  // Serial.print("Frente: ");
-  // showUltraDistance(TRIG_F, ECHO_F);
-  // Serial.print("Direito: ");
-  // showUltraDistance(TRIG_R, ECHO_R);
-  // delay(1000);
-  // Serial.println("------------------------------");
+  if ((angle.y - firstAngle.y) >= 15) {
+    straightPwmLInRamp = 244;
+    straightPwmRInRamp = 244;
+    followLineInRamp(readL, readLC, readC, readRC, readR);
+  } else if (angle.y < -15) {
+    straightPwmLInRamp = 140;
+    straightPwmRInRamp = 140;
+    followLineInRamp(readL, readLC, readC, readRC, readR);
+  } else {
+    followLine(readL, readLC, readC, readRC, readR);
+  }
 }

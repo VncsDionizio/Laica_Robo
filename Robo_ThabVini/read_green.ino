@@ -29,11 +29,9 @@ void followGreen() {
   bReadLC = (readLC < curveValue ? false : true);
   bReadRC = (readRC < curveValue ? false : true);
 
-  // greenSide = readGreen();
-
   if (greenSide == "N") {
     moveFront();
-    delay(300);
+    delay(400);
     reading();
     if (!readC && !bReadLC && !readL) {
       while (!readC) {
@@ -65,7 +63,7 @@ void followGreen() {
   lastRead = readC;
 
   moveFront();
-  delay(500);
+  delay(250);
   while (changes < goal) {
     reading();
     Serial.println(changes);
@@ -81,8 +79,10 @@ void followGreen() {
     }
     if (greenSide == "R" || greenSide == "RL") {
       moveRight();
+      Serial.print("Verde na direita");
     } else if (greenSide == "L") {
       moveLeft();
+      Serial.print("Verde na esquerda");
     }
     // Serial.println(changes);
   }

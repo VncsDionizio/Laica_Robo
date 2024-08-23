@@ -26,3 +26,25 @@ void moveRight() {
 void stopMoving() {
   handleMotor(LOW, LOW, LOW, LOW, 0, 0);
 }
+
+/* <---------------------- Na Rampa ----------------------------> */
+
+void moveFrontInRamp() {
+  handleMotor(HIGH, LOW, HIGH, LOW, straightPwmRInRamp, straightPwmLInRamp);
+}
+
+void moveBackInRamp() {
+  handleMotor(LOW, HIGH, LOW, HIGH, straightPwmRInRamp, straightPwmLInRamp);
+}
+
+void moveLeftInRamp() {
+  handleMotor(LOW, LOW, HIGH, LOW, curvePwmInRamp, curvePwmInRamp);
+}
+
+void moveRightInRamp() {
+  handleMotor(HIGH, LOW, LOW, LOW, curvePwmInRamp, curvePwmInRamp);
+}
+
+void stopMovingInRamp() {
+  handleMotor(LOW, LOW, LOW, LOW, 0, 0);
+}
